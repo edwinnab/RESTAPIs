@@ -5,12 +5,21 @@
 
 const express = require('express')
 const router = express.Router()
-//const Model = require('./Model/model')
+const model = require('../Model/model')
 
 
 //router to post data to the db
-router.post('/post', (req, res) => {
-    res.send("Post data to the database")
+router.post('/post', async (req, res) => {
+    const data = new model({
+        name: req.body.name,
+        age: req.body.age
+    })
+    try {
+        const dataToSave = await data.save()
+        res.status(200).json(dataToSave)
+    } catch (error) {
+        res.status(400).json({message: error.message})
+    }
 })
 
 router.get('/getAll', (req,res)=>{
